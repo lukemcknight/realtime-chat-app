@@ -10,6 +10,7 @@ const socket = io.connect('http://localhost:5000');
 function ChatContainer() {
     const [message, setMessage] = useState('');
     const [chats, setChats] = useState(() => {
+        // Get chats from storage
         try {
             const storedChats = sessionStorage.getItem("chats");
             return storedChats ? JSON.parse(storedChats) : []; 
@@ -21,6 +22,7 @@ function ChatContainer() {
     const [user, setUser] = useState(sessionStorage.getItem("user"));
     const [currentUsers, setCurrentUsers] = useState([]);
 
+    // Get the current user, check for disconnect
     useEffect(() => {
         socket.emit('getUser', user);
         
@@ -38,6 +40,7 @@ function ChatContainer() {
         }
     }, [socket, user])
 
+    // Turn on reciever to recieve and send messages
     useEffect(() => {
         socket.on('receiveMessage', (newMessage) => {
             const updatedChats = [...chats, newMessage.message]; 
